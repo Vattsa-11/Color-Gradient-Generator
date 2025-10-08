@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Frontend Connection Test</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 2rem;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: white;
+        }
+        .test-card {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            padding: 2rem;
+            margin: 1rem 0;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        .status {
+            padding: 0.5rem 1rem;
+            border-radius: 5px;
+            margin: 0.5rem 0;
+            font-weight: bold;
+        }
+        .status.success { background: rgba(34, 197, 94, 0.2); border: 1px solid #22c55e; }
+        .status.error { background: rgba(239, 68, 68, 0.2); border: 1px solid #ef4444; }
+        .status.pending { background: rgba(251, 191, 36, 0.2); border: 1px solid #fbbf24; }
+        code { 
+            background: rgba(0, 0, 0, 0.3); 
+            padding: 0.2rem 0.5rem; 
+            border-radius: 3px; 
+            font-family: 'Courier New', monospace; 
+        }
+    </style>
+</head>
+<body>
+    <h1>🔧 Frontend Connection Test</h1>
+    
+    <div class="test-card">
+        <h2>File Structure Verification</h2>
+        <div id="structure-status" class="status pending">⏳ Checking structure...</div>
+        <p>Expected structure:</p>
+        <pre><code>gradient-lab/
+├── frontend/
+│   ├── index.html (✓ This page loaded!)
+│   ├── css/styles.css
+│   ├── js/app.js
+│   └── img/
+└── backend/
+    ├── server.py
+    ├── color_utils.py
+    └── requirements.txt</code></pre>
+    </div>
+
+    <div class="test-card">
+        <h2>CSS Connection Test</h2>
+        <div id="css-status" class="status pending">⏳ Checking CSS...</div>
+        <div id="css-test" style="width: 100%; height: 50px; background: linear-gradient(45deg, #ff6b6b, #4ecdc4); border-radius: 5px; margin: 1rem 0;"></div>
+    </div>
+
+    <div class="test-card">
+        <h2>JavaScript Connection Test</h2>
+        <div id="js-status" class="status pending">⏳ Checking JavaScript...</div>
+        <button id="test-button" onclick="testJS()" style="padding: 0.5rem 1rem; border: none; border-radius: 5px; background: #4ecdc4; color: white; cursor: pointer;">Click to Test JS</button>
+        <div id="js-result"></div>
+    </div>
+
+    <div class="test-card">
+        <h2>API Connection Test</h2>
+        <div id="api-status" class="status pending">⏳ Checking API...</div>
+        <button id="api-button" onclick="testAPI()" style="padding: 0.5rem 1rem; border: none; border-radius: 5px; background: #667eea; color: white; cursor: pointer;">Test API Connection</button>
+        <div id="api-result"></div>
+    </div>
+
+    <div class="test-card">
+        <h2>Next Steps</h2>
+        <p>If all tests pass:</p>
+        <ul>
+            <li>✅ Go to <a href="/" style="color: #4ecdc4;">http://127.0.0.1:8000/</a> for the main app</li>
+            <li>📚 Check API docs at <a href="/api/docs" style="color: #4ecdc4;">http://127.0.0.1:8000/api/docs</a></li>
+        </ul>
+    </div>
+
+    <script>
+        // Test if this JavaScript file loaded
+        document.addEventListener('DOMContentLoaded', function() {
+            document.getElementById('structure-status').innerHTML = '✅ Structure OK - This HTML page loaded successfully!';
+            document.getElementById('structure-status').className = 'status success';
+            
+            // Test CSS
+            const cssTest = document.getElementById('css-test');
+            if (cssTest && getComputedStyle(cssTest).background) {
+                document.getElementById('css-status').innerHTML = '✅ CSS loaded and working!';
+                document.getElementById('css-status').className = 'status success';
+            } else {
+                document.getElementById('css-status').innerHTML = '❌ CSS not loading properly';
+                document.getElementById('css-status').className = 'status error';
+            }
+            
+            // Test JavaScript
+            document.getElementById('js-status').innerHTML = '✅ JavaScript is working!';
+            document.getElementById('js-status').className = 'status success';
+        });
+
+        function testJS() {
+            const now = new Date();
+            document.getElementById('js-result').innerHTML = `<div class="status success">✅ JavaScript executed at ${now.toLocaleTimeString()}</div>`;
+        }
+
+        async function testAPI() {
+            const apiStatus = document.getElementById('api-status');
+            const apiResult = document.getElementById('api-result');
+            
+            apiStatus.innerHTML = '⏳ Testing API connection...';
+            apiStatus.className = 'status pending';
+            
+            try {
+                const response = await fetch('/health');
+                if (response.ok) {
+                    const data = await response.json();
+                    apiStatus.innerHTML = '✅ API connection successful!';
+                    apiStatus.className = 'status success';
+                    apiResult.innerHTML = `<div class="status success">✅ Health check response: ${JSON.stringify(data)}</div>`;
+                } else {
+                    throw new Error(`HTTP ${response.status}`);
+                }
+            } catch (error) {
+                apiStatus.innerHTML = '❌ API connection failed';
+                apiStatus.className = 'status error';
+                apiResult.innerHTML = `<div class="status error">❌ Error: ${error.message}</div>`;
+            }
+        }
+
+        // Auto-test API on load
+        setTimeout(testAPI, 1000);
+    </script>
+</body>
+</html>
