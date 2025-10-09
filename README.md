@@ -57,19 +57,8 @@ Craft, test, and export beautiful color gradients with a polished web UI and a P
    ```
 
 4. **Start the server**
-   
-   **Option A: Using the startup script (Recommended)**
    ```bash
-   python start_server.py
-   ```
-   
-   **Option B: Windows users can also use**
-   ```cmd
-   start_server.bat
-   ```
-   
-   **Option C: Manual startup**
-   ```bash
+   # Navigate to backend directory
    cd backend
    python server.py
    ```
